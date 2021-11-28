@@ -1,0 +1,85 @@
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+#include <time.h>
+#include <vector>
+#include <algorithm>
+using std::ofstream;
+using std::cout;
+using std::cin;
+using std::endl;
+using std::string;
+using std::vector;
+using std::sort;
+
+//constants
+const int HIGH = 100;
+const int LOW = -100;
+
+int main (int arc, char *argv[]) {
+  string inFile = "";
+  string outFile = "";
+  cin >> inFile;
+  cin >> outFile;
+  //create an input text
+  ofstream myfile;
+  //myfile.open("input.txt");
+  myfile.open(inFile);
+
+  //declare a vector to store randomly generated numbers
+  int size = 25;
+  vector<float> randomList(size);
+  srand (time(NULL));
+  for (size_t i = 0; i < size; ++i) {
+    randomList[i] = LOW + static_cast<float>(rand()) /(static_cast<float>(RAND_MAX/(HIGH-LOW)));
+    cout << "Generated: " << randomList[i] << endl;
+    myfile << randomList[i] << endl; //was " "
+  }
+  myfile.close();
+  cout << endl << "RandomList size: " << randomList.size();
+  cout << endl << endl;
+
+  //read values from input text into a new vector
+  vector<float> test (size);
+  cout << "Read and Print Values from text: " << endl;
+  string line = ""; 
+  std::ifstream inputfile ("input.txt");
+  if (inputfile.is_open()){
+    while(getline (inputfile, line)) {
+      cout << "LINE: " << line << "\n";//was " "
+      float floatLine = stof(line);
+      test.push_back(floatLine);
+    }
+  }
+  inputfile.close();
+  cout << endl << "Test size: " << test.size();
+  cout << endl << endl;
+
+  //sort the vector then print values to new text
+  ofstream outfile;
+  //outfile.open("output.txt");
+  outfile.open(outFile);
+  cout << "Sorted array:" << endl;
+  sort (test.begin(), test.end());
+  for (size_t i = 0; i < test.size(); ++i){
+    //the next two lines still produce the 0s error
+    //cout << "TEST: " << test[i] << endl;
+    //outfile << test[i] << endl;
+    
+    //this if statement stops the 0s error
+    if (test[i] == 0) { /*empty*/  }
+    else {
+      cout << "TEST: " << test[i] << endl;
+      outfile << test[i] << endl;
+    }
+  }
+  outfile.close();
+  cout << endl << "Test size after sort: " << test.size() << endl;
+  
+  return 0;
+}
+/**Notes
+ * Reading and writeing to files works but only with the if statement in the 
+ * outfile block.
+ */
